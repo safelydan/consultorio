@@ -1,27 +1,25 @@
-const {DataTypes} = require('sequelize')
-const sequelize = require('../connect')
-
-const Paciente = sequelize.define('Paciente', {
-    nome: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    cpf: {
-        type: DataTypes.STRING,
-        allowNull: false
-    },
-    dataNascimento: {
-        type: DataTypes.DATE,
-        allowNull: false
-    },
-})
-
-Paciente.sync({
-    force: false
-}).then(() =>{
-    console.log('tabela criada')
-}).catch(err => {
-    console.error('erro ao criar tabela', err)
-})
-
-module.exports = Paciente;
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Paciente extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // define association here
+    }
+  }
+  Paciente.init({
+    nome: DataTypes.STRING,
+    cpf: DataTypes.STRING,
+    dataNascimento: DataTypes.DATE
+  }, {
+    sequelize,
+    modelName: 'Paciente',
+  });
+  return Paciente;
+};

@@ -1,29 +1,27 @@
-const {DataTypes} = require('sequelize')
-const sequelize = require('../connect.js')
-const Paciente = require('./paciente.js')
-
-const Consulta = sequelize.define('Consultas', {
-    data_consulta: {
-        type: DataTypes.DATE,
-        allowNull: false
-    },
-    hora_inicial: {
-        type: DataTypes.TIME,
-        allowNull: false
-    },
-    hora_final: {
-        type: DataTypes.TIME,
-        allowNull: false
+'use strict';
+const {
+  Model
+} = require('sequelize');
+module.exports = (sequelize, DataTypes) => {
+  class Consulta extends Model {
+    /**
+     * Helper method for defining associations.
+     * This method is not a part of Sequelize lifecycle.
+     * The `models/index` file will call this method automatically.
+     */
+    static associate(models) {
+      // Define a associação belongsTo com o modelo Paciente
+      Consulta.belongsTo(models.Paciente, { foreignKey: 'paciente_cpf', allowNull: false });
     }
-})
-
-Consulta.belongsTo(Paciente, {foreignKey: 'paciente.cpf', allowNull: false})
-
-Consulta.sync({
-    force: false
-}).then(() =>{
-    console.log('tabela criada')
-}).catch(err => {
-    console.error('erro ao criar tabela', err)
-})
-module.exports = Consulta;
+  }
+  Consulta.init({
+    data_consulta: DataTypes.DATE,
+    hora_inicial: DataTypes.TIME,
+    hora_final: DataTypes.TIME,
+    paciente_cpf: DataTypes.STRING
+  }, {
+    sequelize,
+    modelName: 'Consulta',
+  });
+  return Consulta;
+};
